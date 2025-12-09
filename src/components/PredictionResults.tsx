@@ -27,7 +27,7 @@ export function PredictionResults({ language, result }: PredictionResultsProps) 
             <div className="flex justify-between items-center p-4 bg-secondary rounded-lg">
               <span className="font-medium text-secondary-foreground">{t.currentYield}:</span>
               <span className="text-2xl font-bold text-primary">
-                {result.current_yield.toFixed(2)} {t.units}
+                {result.current_yield?.toFixed(2) ?? '0.00'} {t.units}
               </span>
             </div>
           </div>
@@ -45,7 +45,7 @@ export function PredictionResults({ language, result }: PredictionResultsProps) 
           {result.recommended_crop ? (
             <div className="p-4 bg-accent/10 border border-accent/20 rounded-lg">
               <p className="text-foreground">
-                {t.recommendationPrefix} <strong className="text-accent">{result.recommended_crop}</strong> {t.recommendationSuffix} <strong className="text-accent">+{result.estimated_gain} {t.units}</strong>
+                {t.recommendationPrefix} <strong className="text-accent">{result.recommended_crop}</strong> {t.recommendationSuffix} <strong className="text-accent">+{result.estimated_gain ?? 0} {t.units}</strong>
               </p>
             </div>
           ) : (

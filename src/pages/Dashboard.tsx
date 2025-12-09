@@ -115,7 +115,7 @@ const Dashboard = () => {
             farm_id: selectedFarm?.id || null,
             crop: inputData.crop,
             season: inputData.season,
-            crop_year: inputData.year,
+            crop_year: new Date().getFullYear(),
             predicted_yield: data.current_yield,
             recommended_crop: data.recommended_crop,
             estimated_gain: data.estimated_gain,
