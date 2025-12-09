@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
-import { LogOut, History, Cloud, Tractor, TrendingUp, Plus } from "lucide-react";
+import { LogOut, History, Cloud, Tractor, TrendingUp, Plus, Sprout } from "lucide-react";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { PredictionForm } from "@/components/PredictionForm";
 import { PredictionResults } from "@/components/PredictionResults";
@@ -160,139 +160,187 @@ const Dashboard = () => {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-secondary/20 to-background flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      <div className="min-h-screen bg-gradient-mesh flex items-center justify-center">
+        <div className="relative">
+          <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl animate-pulse-soft" />
+          <div className="relative animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent"></div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-secondary/20 to-background">
-      <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="mb-8 text-center space-y-4">
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-            {t.title}
-          </h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            {t.subtitle}
-          </p>
-        </div>
+    <div className="min-h-screen relative">
+      {/* Background */}
+      <div className="fixed inset-0 bg-gradient-mesh opacity-50" />
+      <div className="fixed inset-0 bg-background/60" />
 
-        {/* Controls Bar */}
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8">
-          <LanguageSelector 
-            currentLanguage={language} 
-            onLanguageChange={setLanguage} 
-          />
-          
-          <div className="flex items-center gap-4">
-            <div className="text-sm text-muted-foreground">
-              <span className="font-medium">Welcome,</span> {user.email}
+      {/* Content */}
+      <div className="relative z-10">
+        <div className="container mx-auto px-4 py-8">
+          {/* Header */}
+          <div className="mb-10 text-center space-y-4 animate-fade-in">
+            <div className="flex justify-center mb-4">
+              <div className="relative">
+                <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl animate-pulse-soft" />
+                <div className="relative p-3 bg-gradient-primary rounded-2xl shadow-glow">
+                  <Sprout className="h-8 w-8 text-primary-foreground" />
+                </div>
+              </div>
             </div>
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={handleLogout}
-              className="border-border hover:bg-secondary"
-            >
-              <LogOut className="h-4 w-4 mr-2" />
-              {t.logout}
-            </Button>
+            <h1 className="text-4xl md:text-5xl font-display font-bold text-gradient-hero">
+              {t.title}
+            </h1>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              {t.subtitle}
+            </p>
+          </div>
+
+          {/* Controls Bar */}
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+            <LanguageSelector 
+              currentLanguage={language} 
+              onLanguageChange={setLanguage} 
+            />
+            
+            <div className="flex items-center gap-4">
+              <div className="px-4 py-2 rounded-xl bg-card/80 backdrop-blur-sm border border-border/50 shadow-soft">
+                <span className="text-sm text-muted-foreground">Welcome, </span>
+                <span className="text-sm font-medium text-foreground">{user.email}</span>
+              </div>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={handleLogout}
+                className="border-border/50 bg-card/80 backdrop-blur-sm hover:bg-destructive/10 hover:text-destructive hover:border-destructive/50 transition-all rounded-xl"
+              >
+                <LogOut className="h-4 w-4 mr-2" />
+                {t.logout}
+              </Button>
+            </div>
+          </div>
+
+          <Separator className="mb-8 bg-border/50" />
+
+          {/* Main Content with Tabs */}
+          <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+            <Tabs defaultValue="predict" className="space-y-8">
+              <TabsList className="grid w-full grid-cols-4 max-w-2xl mx-auto p-1.5 bg-card/80 backdrop-blur-sm border border-border/50 rounded-2xl shadow-soft">
+                <TabsTrigger 
+                  value="predict" 
+                  className="flex items-center gap-2 rounded-xl data-[state=active]:bg-gradient-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-glow transition-all"
+                >
+                  <TrendingUp className="h-4 w-4" />
+                  <span className="hidden sm:inline">Predict</span>
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="farms" 
+                  className="flex items-center gap-2 rounded-xl data-[state=active]:bg-gradient-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-glow transition-all"
+                >
+                  <Tractor className="h-4 w-4" />
+                  <span className="hidden sm:inline">Farms</span>
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="weather" 
+                  className="flex items-center gap-2 rounded-xl data-[state=active]:bg-gradient-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-glow transition-all"
+                >
+                  <Cloud className="h-4 w-4" />
+                  <span className="hidden sm:inline">Weather</span>
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="history" 
+                  className="flex items-center gap-2 rounded-xl data-[state=active]:bg-gradient-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-glow transition-all"
+                >
+                  <History className="h-4 w-4" />
+                  <span className="hidden sm:inline">History</span>
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="predict" className="space-y-6">
+                <div className="grid md:grid-cols-2 gap-8">
+                  <div className="space-y-6">
+                    <div className="hover-lift">
+                      <PredictionForm 
+                        language={language}
+                        onSubmit={handlePrediction}
+                        isLoading={isLoading}
+                      />
+                    </div>
+                    {weather && (
+                      <div className="hover-lift">
+                        <WeatherCard weather={weather} language={language} />
+                      </div>
+                    )}
+                  </div>
+                  <div className="space-y-6">
+                    {result && (
+                      <div className="hover-lift">
+                        <PredictionResults 
+                          language={language}
+                          result={result}
+                        />
+                      </div>
+                    )}
+                    {result && (
+                      <Button 
+                        onClick={() => setShowOptimization(true)}
+                        className="w-full h-12 bg-gradient-accent hover:opacity-90 text-accent-foreground font-semibold rounded-xl shadow-accent-glow hover:shadow-strong transition-all"
+                        variant="outline"
+                      >
+                        <Plus className="h-5 w-5 mr-2" />
+                        Get AI Optimization Tips
+                      </Button>
+                    )}
+                    {showOptimization && result && (
+                      <div className="hover-lift">
+                        <OptimizationCard 
+                          result={result}
+                          weather={weather}
+                          formData={selectedFarm || { state: 'Karnataka', district: 'MYSORE' }}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="farms">
+                <FarmManager 
+                  userId={user.id} 
+                  onSelectFarm={setSelectedFarm}
+                  language={language}
+                />
+              </TabsContent>
+
+              <TabsContent value="weather">
+                <div className="max-w-md mx-auto">
+                  <Card className="shadow-medium border-0 bg-card/95 backdrop-blur-sm overflow-hidden hover-lift">
+                    <div className="h-1 bg-gradient-hero" />
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2 font-display">
+                        <div className="p-2 bg-primary/10 rounded-lg">
+                          <Cloud className="h-5 w-5 text-primary" />
+                        </div>
+                        Weather Lookup
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-muted-foreground mb-4">
+                        Weather data is automatically fetched when you make a prediction. 
+                        Select a district in the prediction form to see current conditions.
+                      </p>
+                      {weather && <WeatherCard weather={weather} language={language} />}
+                    </CardContent>
+                  </Card>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="history">
+                <PredictionHistory userId={user.id} language={language} />
+              </TabsContent>
+            </Tabs>
           </div>
         </div>
-
-        <Separator className="mb-8 bg-border" />
-
-        {/* Main Content with Tabs */}
-        <Tabs defaultValue="predict" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 max-w-2xl mx-auto">
-            <TabsTrigger value="predict" className="flex items-center gap-2">
-              <TrendingUp className="h-4 w-4" />
-              Predict
-            </TabsTrigger>
-            <TabsTrigger value="farms" className="flex items-center gap-2">
-              <Tractor className="h-4 w-4" />
-              Farms
-            </TabsTrigger>
-            <TabsTrigger value="weather" className="flex items-center gap-2">
-              <Cloud className="h-4 w-4" />
-              Weather
-            </TabsTrigger>
-            <TabsTrigger value="history" className="flex items-center gap-2">
-              <History className="h-4 w-4" />
-              History
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="predict" className="space-y-6">
-            <div className="grid md:grid-cols-2 gap-8">
-              <div className="space-y-6">
-                <PredictionForm 
-                  language={language}
-                  onSubmit={handlePrediction}
-                  isLoading={isLoading}
-                />
-                {weather && <WeatherCard weather={weather} language={language} />}
-              </div>
-              <div className="space-y-6">
-                <PredictionResults 
-                  language={language}
-                  result={result}
-                />
-                {result && (
-                  <Button 
-                    onClick={() => setShowOptimization(true)}
-                    className="w-full"
-                    variant="outline"
-                  >
-                    <Plus className="h-4 w-4 mr-2" />
-                    Get AI Optimization Tips
-                  </Button>
-                )}
-                {showOptimization && result && (
-                  <OptimizationCard 
-                    result={result}
-                    weather={weather}
-                    formData={selectedFarm || { state: 'Karnataka', district: 'MYSORE' }}
-                  />
-                )}
-              </div>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="farms">
-            <FarmManager 
-              userId={user.id} 
-              onSelectFarm={setSelectedFarm}
-              language={language}
-            />
-          </TabsContent>
-
-          <TabsContent value="weather">
-            <div className="max-w-md mx-auto">
-              <Card className="shadow-medium border-border bg-card">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Cloud className="h-5 w-5 text-primary" />
-                    Weather Lookup
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground mb-4">
-                    Weather data is automatically fetched when you make a prediction. 
-                    Select a district in the prediction form to see current conditions.
-                  </p>
-                  {weather && <WeatherCard weather={weather} language={language} />}
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="history">
-            <PredictionHistory userId={user.id} language={language} />
-          </TabsContent>
-        </Tabs>
       </div>
     </div>
   );
