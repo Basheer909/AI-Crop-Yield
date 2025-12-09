@@ -3,7 +3,6 @@ export interface PredictionInput {
   district: string;
   crop: string;
   season: string;
-  year: number;
 }
 
 export interface PredictionResult {
@@ -23,8 +22,7 @@ export async function get_prediction_and_optimization(
 
   // Mock yield calculation based on inputs
   const baseYield = Math.random() * 100 + 50;
-  const yearFactor = (inputData.year - 1990) * 0.5;
-  const current_yield = Math.round((baseYield + yearFactor) * 100) / 100;
+  const current_yield = Math.round(baseYield * 100) / 100;
 
   // Mock optimization logic
   const crops = ['Groundnut', 'Rice', 'Maize', 'Wheat', 'Jowar', 'Arhar/Tur', 'Bajra'];
