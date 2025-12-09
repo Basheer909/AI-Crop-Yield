@@ -20,11 +20,9 @@ interface PredictionFormProps {
   isLoading: boolean;
 }
 
-const states = ['Andhra Pradesh', 'West Bengal', 'Karnataka'];
+const states = ['Karnataka'];
 
 const districts = [
-  'ANANTAPUR',
-  'PURULIA',
   'BANGALORE RURAL',
   'BANGALORE URBAN',
   'BELGAUM',
@@ -65,7 +63,6 @@ export function PredictionForm({ language, onSubmit, isLoading }: PredictionForm
     district: '',
     crop: '',
     season: '',
-    year: 1997,
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -149,18 +146,6 @@ export function PredictionForm({ language, onSubmit, isLoading }: PredictionForm
             </Select>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="year" className="text-foreground">{t.cropYear}</Label>
-            <Input
-              id="year"
-              type="number"
-              value={formData.year}
-              onChange={(e) => setFormData({ ...formData, year: parseInt(e.target.value) || 1997 })}
-              min="1990"
-              max="2030"
-              className="bg-background border-border text-foreground"
-            />
-          </div>
 
           <Button 
             type="submit" 
