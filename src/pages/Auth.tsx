@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { Sprout, Loader2 } from "lucide-react";
+import { Sprout, Loader2, Wheat, Sun, Cloud } from "lucide-react";
 import { z } from "zod";
 
 const emailSchema = z.string().email("Please enter a valid email address");
@@ -156,139 +156,199 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-secondary/20 to-background flex items-center justify-center p-4">
-      <Card className="w-full max-w-md shadow-medium border-border bg-card">
-        <CardHeader className="text-center space-y-4">
-          <div className="flex justify-center">
-            <div className="p-3 bg-primary/10 rounded-full">
-              <Sprout className="h-8 w-8 text-primary" />
-            </div>
-          </div>
-          <CardTitle className="text-2xl font-bold text-foreground">
-            AI Crop Yield Optimizer
-          </CardTitle>
-          <CardDescription className="text-muted-foreground">
-            Sign in to optimize your crop yields with AI
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Tabs defaultValue="login" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="login">Login</TabsTrigger>
-              <TabsTrigger value="signup">Sign Up</TabsTrigger>
-            </TabsList>
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Animated background */}
+      <div className="absolute inset-0 bg-gradient-mesh" />
+      <div className="absolute inset-0 bg-background/40" />
+      
+      {/* Floating decorative elements */}
+      <div className="absolute top-20 left-10 opacity-20 animate-float">
+        <Wheat className="h-24 w-24 text-primary" />
+      </div>
+      <div className="absolute top-40 right-20 opacity-15 animate-float" style={{ animationDelay: '2s' }}>
+        <Sun className="h-32 w-32 text-accent" />
+      </div>
+      <div className="absolute bottom-32 left-1/4 opacity-15 animate-float" style={{ animationDelay: '4s' }}>
+        <Cloud className="h-20 w-20 text-agricultural-sky" />
+      </div>
+      <div className="absolute bottom-20 right-1/4 opacity-20 animate-float" style={{ animationDelay: '1s' }}>
+        <Sprout className="h-16 w-16 text-primary" />
+      </div>
 
-            <TabsContent value="login">
-              <form onSubmit={handleLogin} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="login-email">Email</Label>
-                  <Input
-                    id="login-email"
-                    type="email"
-                    placeholder="farmer@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="bg-background border-border"
-                    required
-                  />
-                  {errors.email && (
-                    <p className="text-sm text-destructive">{errors.email}</p>
-                  )}
+      {/* Main content */}
+      <div className="relative z-10 min-h-screen flex items-center justify-center p-4">
+        <div className="w-full max-w-md animate-fade-in-up">
+          <Card className="shadow-strong border-0 bg-card/95 backdrop-blur-sm overflow-hidden">
+            {/* Gradient accent bar */}
+            <div className="h-1.5 bg-gradient-hero" />
+            
+            <CardHeader className="text-center space-y-6 pt-8 pb-4">
+              <div className="flex justify-center">
+                <div className="relative">
+                  <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl animate-pulse-soft" />
+                  <div className="relative p-4 bg-gradient-primary rounded-2xl shadow-glow">
+                    <Sprout className="h-10 w-10 text-primary-foreground" />
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="login-password">Password</Label>
-                  <Input
-                    id="login-password"
-                    type="password"
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="bg-background border-border"
-                    required
-                  />
-                  {errors.password && (
-                    <p className="text-sm text-destructive">{errors.password}</p>
-                  )}
-                </div>
-                <Button
-                  type="submit"
-                  className="w-full bg-primary hover:bg-primary/90"
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Signing in...
-                    </>
-                  ) : (
-                    "Sign In"
-                  )}
-                </Button>
-              </form>
-            </TabsContent>
+              </div>
+              <div className="space-y-2">
+                <CardTitle className="text-3xl font-display font-bold text-gradient-hero">
+                  AI Crop Yield Optimizer
+                </CardTitle>
+                <CardDescription className="text-muted-foreground text-base">
+                  Maximize your harvest with intelligent predictions
+                </CardDescription>
+              </div>
+            </CardHeader>
 
-            <TabsContent value="signup">
-              <form onSubmit={handleSignup} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="signup-name">Full Name</Label>
-                  <Input
-                    id="signup-name"
-                    type="text"
-                    placeholder="Your full name"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    className="bg-background border-border"
-                  />
+            <CardContent className="px-8 pb-8">
+              <Tabs defaultValue="login" className="w-full">
+                <TabsList className="grid w-full grid-cols-2 mb-8 p-1 bg-muted/50 rounded-xl">
+                  <TabsTrigger 
+                    value="login" 
+                    className="rounded-lg font-medium data-[state=active]:bg-card data-[state=active]:shadow-soft data-[state=active]:text-primary transition-all"
+                  >
+                    Login
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="signup"
+                    className="rounded-lg font-medium data-[state=active]:bg-card data-[state=active]:shadow-soft data-[state=active]:text-primary transition-all"
+                  >
+                    Sign Up
+                  </TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="login" className="space-y-6 animate-fade-in">
+                  <form onSubmit={handleLogin} className="space-y-5">
+                    <div className="space-y-2">
+                      <Label htmlFor="login-email" className="text-sm font-medium text-foreground">Email</Label>
+                      <Input
+                        id="login-email"
+                        type="email"
+                        placeholder="farmer@example.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="h-12 bg-muted/50 border-border/50 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                        required
+                      />
+                      {errors.email && (
+                        <p className="text-sm text-destructive">{errors.email}</p>
+                      )}
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="login-password" className="text-sm font-medium text-foreground">Password</Label>
+                      <Input
+                        id="login-password"
+                        type="password"
+                        placeholder="••••••••"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="h-12 bg-muted/50 border-border/50 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                        required
+                      />
+                      {errors.password && (
+                        <p className="text-sm text-destructive">{errors.password}</p>
+                      )}
+                    </div>
+                    <Button
+                      type="submit"
+                      className="w-full h-12 bg-gradient-primary hover:opacity-90 text-primary-foreground font-semibold rounded-xl shadow-glow hover:shadow-strong transition-all duration-300"
+                      disabled={isLoading}
+                    >
+                      {isLoading ? (
+                        <>
+                          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                          Signing in...
+                        </>
+                      ) : (
+                        "Sign In"
+                      )}
+                    </Button>
+                  </form>
+                </TabsContent>
+
+                <TabsContent value="signup" className="space-y-6 animate-fade-in">
+                  <form onSubmit={handleSignup} className="space-y-5">
+                    <div className="space-y-2">
+                      <Label htmlFor="signup-name" className="text-sm font-medium text-foreground">Full Name</Label>
+                      <Input
+                        id="signup-name"
+                        type="text"
+                        placeholder="Your full name"
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                        className="h-12 bg-muted/50 border-border/50 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="signup-email" className="text-sm font-medium text-foreground">Email</Label>
+                      <Input
+                        id="signup-email"
+                        type="email"
+                        placeholder="farmer@example.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="h-12 bg-muted/50 border-border/50 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                        required
+                      />
+                      {errors.email && (
+                        <p className="text-sm text-destructive">{errors.email}</p>
+                      )}
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="signup-password" className="text-sm font-medium text-foreground">Password</Label>
+                      <Input
+                        id="signup-password"
+                        type="password"
+                        placeholder="••••••••"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="h-12 bg-muted/50 border-border/50 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                        required
+                      />
+                      {errors.password && (
+                        <p className="text-sm text-destructive">{errors.password}</p>
+                      )}
+                    </div>
+                    <Button
+                      type="submit"
+                      className="w-full h-12 bg-gradient-primary hover:opacity-90 text-primary-foreground font-semibold rounded-xl shadow-glow hover:shadow-strong transition-all duration-300"
+                      disabled={isLoading}
+                    >
+                      {isLoading ? (
+                        <>
+                          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                          Creating account...
+                        </>
+                      ) : (
+                        "Create Account"
+                      )}
+                    </Button>
+                  </form>
+                </TabsContent>
+              </Tabs>
+
+              {/* Feature highlights */}
+              <div className="mt-8 pt-6 border-t border-border/50">
+                <div className="grid grid-cols-3 gap-4 text-center">
+                  <div className="space-y-1">
+                    <div className="text-2xl">🌾</div>
+                    <p className="text-xs text-muted-foreground">AI Predictions</p>
+                  </div>
+                  <div className="space-y-1">
+                    <div className="text-2xl">📊</div>
+                    <p className="text-xs text-muted-foreground">Smart Analytics</p>
+                  </div>
+                  <div className="space-y-1">
+                    <div className="text-2xl">🌤️</div>
+                    <p className="text-xs text-muted-foreground">Weather Data</p>
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="signup-email">Email</Label>
-                  <Input
-                    id="signup-email"
-                    type="email"
-                    placeholder="farmer@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="bg-background border-border"
-                    required
-                  />
-                  {errors.email && (
-                    <p className="text-sm text-destructive">{errors.email}</p>
-                  )}
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="signup-password">Password</Label>
-                  <Input
-                    id="signup-password"
-                    type="password"
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="bg-background border-border"
-                    required
-                  />
-                  {errors.password && (
-                    <p className="text-sm text-destructive">{errors.password}</p>
-                  )}
-                </div>
-                <Button
-                  type="submit"
-                  className="w-full bg-primary hover:bg-primary/90"
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Creating account...
-                    </>
-                  ) : (
-                    "Create Account"
-                  )}
-                </Button>
-              </form>
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 };
