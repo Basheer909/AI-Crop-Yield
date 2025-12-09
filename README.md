@@ -1,73 +1,218 @@
-# Welcome to our project
+# 🌾 AI-Based Crop Yield Prediction & Optimization Platform
 
-## Project info
+This project is a **full-stack ML-powered system** designed to help farmers predict crop yields in real time and receive data-driven optimization recommendations using Indian agricultural data.
+It includes a modern UI, ML inference engine, district-specific adjustments, and optional integration with live weather APIs.
 
-**URL**: https://lovable.dev/projects/5cc7e20b-4a1c-456a-a80f-28ae5b68a370
+---
 
-## How can I edit this code?
+## 🚀 Project Overview
 
-There are several ways of editing your application.
+The platform provides:
 
-**Use Lovable**
+* 🔐 **User Authentication** (Register/Login)
+* 📍 **Farm Management** (save district, crop, season, etc.)
+* 🤖 **ML-Based Yield Prediction** using Multiple Linear Regression
+  (with crop-specific coefficients and district factors)
+* 🌦️ **Optional Live Weather Integration**
+* 📈 **Model Confidence & Factor Contributions**
+* 🌱 **Optimization Recommendation** (suggest better alternative crops)
+* 📊 **Data Visualizations** (impact charts, trend lines, crop comparison)
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/5cc7e20b-4a1c-456a-a80f-28ae5b68a370) and start prompting.
+This project supports Indian crops like Rice, Wheat, Jowar, Arhar/Tur, Bajra, Maize, Groundnut, Soybeans, etc.
 
-Changes made via Lovable will be committed automatically to this repo.
+---
 
-**Use your preferred IDE**
+## 🏗️ Tech Stack
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### **Frontend**
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+* React + TypeScript
+* Vite
+* shadcn-ui
+* Tailwind CSS
 
-Follow these steps:
+### **Backend / ML**
+
+* Serverless Edge Function (TypeScript)
+* Multiple Linear Regression (hand-engineered coefficients)
+* Seasonal weather averages
+* District-level adjustment factors
+
+---
+
+## 📂 Project Structure
+
+```
+project-root/
+├── src/
+│   ├── components/       # UI components
+│   ├── lib/              # predictionService & helpers
+│   ├── pages/            # main screens
+│   └── styles/
+├── edge-functions/
+│   └── predictYield.ts   # ML inference engine
+├── public/
+├── package.json
+└── README.md
+```
+
+---
+
+## ⚙️ Installation & Setup
+
+Before running the project, ensure you have **Node.js** and **npm** installed.
+
+### **1. Clone the repository**
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
+git clone <YOUR_REPOSITORY_URL>
 cd <YOUR_PROJECT_NAME>
+```
 
-# Step 3: Install the necessary dependencies.
-npm i
+### **2. Install dependencies**
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+```sh
+npm install
+```
+
+### **3. Start the development server**
+
+```sh
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+### **4. Edit the project**
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+You can now open the folder in your preferred editor (VS Code recommended):
 
-**Use GitHub Codespaces**
+```sh
+code .
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+---
 
-## What technologies are used for this project?
+## 🌤️ Live Weather Integration (Optional)
 
-This project is built with:
+To enable live weather predictions, add your **OpenWeatherMap API key** inside your environment configuration:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+```
+OPENWEATHER_KEY=your_api_key
+```
 
-## How can I deploy this project?
+If omitted, the model will fall back to **India's seasonal average climate data**.
 
-Simply open [Lovable](https://lovable.dev/projects/5cc7e20b-4a1c-456a-a80f-28ae5b68a370) and click on Share -> Publish.
+---
 
-## Can I connect a custom domain to my Lovable project?
+## 🤖 ML Model Logic (Summary)
 
-Yes, you can!
+The ML model uses:
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+### **1. Crop-level coefficients**
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Each crop has its own regression parameters:
+
+* intercept
+* rainfall coefficient
+* temperature coefficient
+* pesticides coefficient
+* baseline yield & standard deviation
+
+### **2. Seasonal climate baselines**
+
+* Kharif
+* Rabi
+* Autumn
+* Whole Year
+
+### **3. District adjustment factors (Karnataka)**
+
+Example:
+
+```
+Chikkamagaluru → ×1.25  
+Tumkur → ×1.05  
+Raichur → ×0.95  
+```
+
+### **4. Confidence estimation**
+
+Based on deviation from expected rainfall and temperature.
+
+### **5. Alternative Crop Recommendation**
+
+The system evaluates other crops and recommends one with significantly higher potential yield.
+
+---
+
+## 🧪 Prediction Flow
+
+1. User selects:
+
+   * State
+   * District
+   * Crop
+   * Season
+   * (Optional) Live weather
+
+2. System computes:
+
+   * ML regression yield
+   * District factor adjustment
+   * Seasonal climate adjustments
+   * Confidence score
+
+3. Optimization algorithm:
+
+   * Compares all crop yields
+   * Recommends best alternative crop
+
+4. UI displays:
+
+   * Final predicted yield
+   * Confidence %
+   * Factor impact breakdown
+   * Recommendation & expected gain
+
+---
+
+## 📦 Deployment
+
+You can deploy this project to platforms like:
+
+* **Vercel**
+* **Netlify**
+* **Cloudflare Pages**
+* **Render**
+* **AWS Amplify**
+
+To deploy:
+
+```
+npm run build
+```
+
+Then upload the `dist/` folder or connect your GitHub repository.
+
+---
+
+## 🔧 Customization
+
+You can freely customize:
+
+* Crop coefficients
+* District multipliers
+* Seasonal datasets
+* Weather API sources
+* UI theme & layout
+* Charts & analytics
+
+
+## 🙌 Acknowledgements
+
+The ML model is based on:
+
+* FAO/World Bank agricultural datasets
+* Indian district-level crop statistics
+* Seasonal climate patterns
+
+
