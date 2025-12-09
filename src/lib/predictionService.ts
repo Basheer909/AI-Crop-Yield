@@ -5,15 +5,35 @@ export interface PredictionInput {
   season: string;
 }
 
+export interface ModelFactors {
+  base_intercept: number;
+  rainfall_contribution: number;
+  pesticides_contribution: number;
+  temperature_contribution: number;
+  district_factor: number;
+  seasonal_rainfall: number;
+  seasonal_temp: number;
+}
+
+export interface ModelInfo {
+  type: string;
+  features: string[];
+  training_data: string;
+  factors?: ModelFactors;
+}
+
 export interface PredictionResult {
   current_yield: number;
   status: 'success' | 'error';
   recommended_crop: string | null;
-  estimated_gain: number;
+  estimated_gain: number | null;
   message: string;
+  confidence?: number;
+  model_info?: ModelInfo;
 }
 
-// Simulated prediction function
+// This is now handled by the edge function with real ML model
+// Keeping this for fallback/offline use
 export async function get_prediction_and_optimization(
   inputData: PredictionInput
 ): Promise<PredictionResult> {
@@ -29,7 +49,7 @@ export async function get_prediction_and_optimization(
   const shouldRecommend = Math.random() > 0.5;
   
   let recommended_crop: string | null = null;
-  let estimated_gain = 0;
+  let estimated_gain: number | null = null;
 
   if (shouldRecommend) {
     const otherCrops = crops.filter(c => c !== inputData.crop);
@@ -42,6 +62,7 @@ export async function get_prediction_and_optimization(
     status: 'success',
     recommended_crop,
     estimated_gain,
-    message: 'Prediction successful.'
+    message: 'Prediction successful (fallback mode).',
+    confidence: 0.75,
   };
 }

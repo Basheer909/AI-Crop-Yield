@@ -53,7 +53,20 @@ const districts = [
   'YADGIR',
 ];
 
-const crops = ['Groundnut', 'Rice', 'Maize', 'Wheat', 'Jowar', 'Arhar/Tur', 'Bajra'];
+// Crops from ML training dataset (India agricultural data)
+const crops = [
+  'Rice', 
+  'Wheat', 
+  'Maize', 
+  'Sorghum',  // Same as Jowar
+  'Groundnut',
+  'Potatoes',
+  'Soybeans',
+  'Cassava',
+  'Jowar',
+  'Arhar/Tur',
+  'Bajra'
+];
 const seasons = ['Kharif', 'Rabi', 'Whole Year', 'Autumn'];
 
 export function PredictionForm({ language, onSubmit, isLoading }: PredictionFormProps) {
