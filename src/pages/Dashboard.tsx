@@ -95,12 +95,26 @@ const Dashboard = () => {
   const handlePrediction = async (inputData: any) => {
     setIsLoading(true);
     try {
-      // Fetch weather first
-      await fetchWeather(inputData.district, inputData.state);
+      // Fetch LIVE weather first and use it directly
+      let liveWeather: WeatherData | null = null;
+      try {
+        const { data: weatherData, error: weatherError } = await supabase.functions.invoke('weather', {
+          body: { district: inputData.district, state: inputData.state }
+        });
+        if (!weatherError && weatherData) {
+          liveWeather = weatherData;
+          setWeather(weatherData);
+        }
+      } catch (err) {
+        console.error('Weather fetch error:', err);
+      }
 
-      // Call prediction function
+      // Call prediction function with LIVE weather data
       const { data, error } = await supabase.functions.invoke('predict', {
-        body: { ...inputData, weather }
+        body: { 
+          ...inputData, 
+          weather: liveWeather  // Pass fresh weather, not stale state
+        }
       });
 
       if (error) throw error;
