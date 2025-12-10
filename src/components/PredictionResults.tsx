@@ -1,7 +1,18 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { TrendingUp, Target, Brain, Activity } from "lucide-react";
+import { TrendingUp, Target, Brain, Activity, Cloud, Thermometer, Droplets } from "lucide-react";
 import { translations, Language } from "@/lib/translations";
 import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
+
+interface WeatherImpact {
+  live_temperature?: number;
+  live_humidity?: number;
+  live_rainfall?: number;
+  estimated_seasonal_rainfall?: number;
+  temperature_in_optimal_range?: boolean;
+  rainfall_adequacy?: string;
+  using_seasonal_averages?: boolean;
+}
 
 interface ModelInfo {
   type: string;
@@ -13,9 +24,11 @@ interface ModelInfo {
     pesticides_contribution: number;
     temperature_contribution: number;
     district_factor: number;
-    seasonal_rainfall: number;
-    seasonal_temp: number;
+    effective_temperature?: number;
+    effective_rainfall?: number;
+    optimal_temp_range?: [number, number];
   };
+  weather_impact?: WeatherImpact;
 }
 
 interface PredictionResultExtended {
@@ -43,6 +56,41 @@ export function PredictionResults({ language, result }: PredictionResultsProps) 
 
   return (
     <div className="space-y-4">
+      {/* Live Weather Badge */}
+      {result.model_info?.weather_impact && !result.model_info.weather_impact.using_seasonal_averages && (
+        <Card className="shadow-soft border-0 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 backdrop-blur-sm overflow-hidden">
+          <div className="h-1 bg-gradient-to-r from-blue-500 to-cyan-500" />
+          <CardContent className="pt-4">
+            <div className="flex items-center justify-between flex-wrap gap-3">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-blue-500/10 rounded-lg">
+                  <Cloud className="h-5 w-5 text-blue-500 animate-float" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-foreground">Live Weather Data</p>
+                  <p className="text-xs text-muted-foreground">Real-time conditions applied to prediction</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <Badge variant="secondary" className="gap-1">
+                  <Thermometer className="h-3 w-3" />
+                  {result.model_info.weather_impact.live_temperature?.toFixed(1)}°C
+                </Badge>
+                <Badge variant="secondary" className="gap-1">
+                  <Droplets className="h-3 w-3" />
+                  {result.model_info.weather_impact.live_humidity}%
+                </Badge>
+                {result.model_info.weather_impact.live_rainfall !== undefined && result.model_info.weather_impact.live_rainfall > 0 && (
+                  <Badge variant="secondary" className="gap-1 bg-blue-500/20 text-blue-700 dark:text-blue-300">
+                    🌧️ {result.model_info.weather_impact.live_rainfall.toFixed(1)}mm
+                  </Badge>
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* ML Model Badge */}
       <Card className="shadow-medium border-0 bg-gradient-to-br from-primary/5 to-accent/5 backdrop-blur-sm overflow-hidden">
         <div className="h-1 bg-gradient-primary" />
@@ -98,30 +146,71 @@ export function PredictionResults({ language, result }: PredictionResultsProps) 
 
           {/* Model Factors */}
           {result.model_info?.factors && (
-            <div className="grid grid-cols-2 gap-3 pt-2">
-              <div className="p-3 bg-muted/50 rounded-lg">
-                <p className="text-xs text-muted-foreground">Rainfall Impact</p>
-                <p className="text-sm font-semibold text-foreground">
-                  +{result.model_info.factors.rainfall_contribution?.toLocaleString() || 0} hg/ha
-                </p>
-              </div>
-              <div className="p-3 bg-muted/50 rounded-lg">
-                <p className="text-xs text-muted-foreground">Temperature Effect</p>
-                <p className="text-sm font-semibold text-foreground">
-                  {result.model_info.factors.temperature_contribution?.toLocaleString() || 0} hg/ha
-                </p>
-              </div>
-              <div className="p-3 bg-muted/50 rounded-lg">
-                <p className="text-xs text-muted-foreground">District Factor</p>
-                <p className="text-sm font-semibold text-foreground">
-                  ×{result.model_info.factors.district_factor?.toFixed(2) || '1.00'}
-                </p>
-              </div>
-              <div className="p-3 bg-muted/50 rounded-lg">
-                <p className="text-xs text-muted-foreground">Pesticides Effect</p>
-                <p className="text-sm font-semibold text-foreground">
-                  +{result.model_info.factors.pesticides_contribution?.toLocaleString() || 0} hg/ha
-                </p>
+            <div className="space-y-3 pt-2">
+              {/* Weather Status Row */}
+              {result.model_info.weather_impact && !result.model_info.weather_impact.using_seasonal_averages && (
+                <div className="flex items-center justify-between p-3 bg-blue-500/10 rounded-lg border border-blue-500/20">
+                  <span className="text-xs text-muted-foreground">Effective Temperature</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-semibold text-foreground">
+                      {result.model_info.factors.effective_temperature}°C
+                    </span>
+                    {result.model_info.weather_impact.temperature_in_optimal_range ? (
+                      <Badge variant="secondary" className="text-xs bg-green-500/20 text-green-700 dark:text-green-300">
+                        ✓ Optimal
+                      </Badge>
+                    ) : (
+                      <Badge variant="secondary" className="text-xs bg-amber-500/20 text-amber-700 dark:text-amber-300">
+                        ⚠ Outside optimal
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+              )}
+              
+              {result.model_info.weather_impact && !result.model_info.weather_impact.using_seasonal_averages && (
+                <div className="flex items-center justify-between p-3 bg-cyan-500/10 rounded-lg border border-cyan-500/20">
+                  <span className="text-xs text-muted-foreground">Est. Seasonal Rainfall</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-semibold text-foreground">
+                      {result.model_info.factors.effective_rainfall}mm
+                    </span>
+                    <Badge variant="secondary" className={`text-xs ${
+                      result.model_info.weather_impact.rainfall_adequacy === 'Good' 
+                        ? 'bg-green-500/20 text-green-700 dark:text-green-300'
+                        : 'bg-amber-500/20 text-amber-700 dark:text-amber-300'
+                    }`}>
+                      {result.model_info.weather_impact.rainfall_adequacy}
+                    </Badge>
+                  </div>
+                </div>
+              )}
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="p-3 bg-muted/50 rounded-lg">
+                  <p className="text-xs text-muted-foreground">Rainfall Impact</p>
+                  <p className="text-sm font-semibold text-foreground">
+                    {result.model_info.factors.rainfall_contribution >= 0 ? '+' : ''}{result.model_info.factors.rainfall_contribution?.toLocaleString() || 0} hg/ha
+                  </p>
+                </div>
+                <div className="p-3 bg-muted/50 rounded-lg">
+                  <p className="text-xs text-muted-foreground">Temperature Effect</p>
+                  <p className="text-sm font-semibold text-foreground">
+                    {result.model_info.factors.temperature_contribution >= 0 ? '+' : ''}{result.model_info.factors.temperature_contribution?.toLocaleString() || 0} hg/ha
+                  </p>
+                </div>
+                <div className="p-3 bg-muted/50 rounded-lg">
+                  <p className="text-xs text-muted-foreground">District Factor</p>
+                  <p className="text-sm font-semibold text-foreground">
+                    ×{result.model_info.factors.district_factor?.toFixed(2) || '1.00'}
+                  </p>
+                </div>
+                <div className="p-3 bg-muted/50 rounded-lg">
+                  <p className="text-xs text-muted-foreground">Pesticides Effect</p>
+                  <p className="text-sm font-semibold text-foreground">
+                    +{result.model_info.factors.pesticides_contribution?.toLocaleString() || 0} hg/ha
+                  </p>
+                </div>
               </div>
             </div>
           )}
