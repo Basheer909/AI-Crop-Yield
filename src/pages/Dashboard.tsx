@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { User, Session } from "@supabase/supabase-js";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
@@ -15,6 +14,7 @@ import { WeatherCard } from "@/components/WeatherCard";
 import { FarmManager } from "@/components/FarmManager";
 import { OptimizationCard } from "@/components/OptimizationCard";
 import { PredictionHistory } from "@/components/PredictionHistory";
+import { WeatherLookup } from "@/components/WeatherLookup";
 import { translations, Language } from "@/lib/translations";
 
 interface WeatherData {
@@ -313,25 +313,11 @@ const Dashboard = () => {
               </TabsContent>
 
               <TabsContent value="weather">
-                <div className="max-w-md mx-auto">
-                  <Card className="shadow-medium border-0 bg-card/95 backdrop-blur-sm overflow-hidden hover-lift">
-                    <div className="h-1 bg-gradient-hero" />
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2 font-display">
-                        <div className="p-2 bg-primary/10 rounded-lg">
-                          <Cloud className="h-5 w-5 text-primary" />
-                        </div>
-                        Weather Lookup
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-muted-foreground mb-4">
-                        Weather data is automatically fetched when you make a prediction. 
-                        Select a district in the prediction form to see current conditions.
-                      </p>
-                      {weather && <WeatherCard weather={weather} language={language} />}
-                    </CardContent>
-                  </Card>
+                <div className="max-w-lg mx-auto">
+                  <WeatherLookup 
+                    language={language} 
+                    onWeatherFetched={(weatherData) => setWeather(weatherData)}
+                  />
                 </div>
               </TabsContent>
 
